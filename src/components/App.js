@@ -3,47 +3,48 @@ import "../styles/App.css";
 import Pads from "./Pads";
 
 export const bank1 = {
-  "Q": {
+  Q: {
     name: "Heater 1",
     source: "https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3",
   },
-  "W": {
+  W: {
     name: "Heater 2",
     source: "https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3",
   },
-  "E": {
+  E: {
     name: "Heater 4",
     source: "https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3",
   },
-  "A": {
+  A: {
     name: "Heater 3",
     source: "https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3",
   },
-  "S": {
+  S: {
     name: "Clap",
     source: "https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3",
   },
-  "D": {
+  D: {
     name: "Open Hi-Hat",
     source: "https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3",
   },
-  "Z": {
+  Z: {
     name: "Kick n Hat",
     source: "https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3",
   },
-  "X": {
+  X: {
     name: "Kick",
     source: "https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3",
   },
-  "C": {
+  C: {
     name: "Closed Hi-Hat",
     source: "https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3",
   },
 };
 
-function ControlScreen({ power, setPower, volume, setVolume }) {
-  const handlePowerChange = (e) => {
-    setPower(e.target.checked);
+function ControlScreen({ power, togglePower, volume, setVolume }) {
+  const handlePowerToggle = () => {
+    togglePower(!power);
+    setVolume(1);
   };
 
   const handleVolumeChange = (e) => {
@@ -57,9 +58,11 @@ function ControlScreen({ power, setPower, volume, setVolume }) {
           type="checkbox"
           id="power"
           checked={power}
-          onChange={handlePowerChange}
+          onChange={handlePowerToggle}
         />
-        <span className="checkmark">{power ? "ON" : "OFF"}</span>
+        <span className="checkmark">
+          {power ? "Power ON" : "Power OFF"}
+        </span>
       </label>
       <label id="label-volume">
         <input
@@ -81,20 +84,24 @@ function ControlScreen({ power, setPower, volume, setVolume }) {
 }
 
 function App() {
-  const [power, setPower] = useState(true);
-  const [volume, setVolume] = useState(0.5);
+  const [power, setPower] = useState(false);
+  const [volume, setVolume] = useState(1);
+
+  const togglePower = (value) => {
+    setPower(value);
+  };
 
   return (
     <div id="drum-machine">
-      <Pads
-        bank={bank1}
+      <Pads power={power} volume={volume} />
+      <ControlScreen
         power={power}
+        togglePower={togglePower}
         volume={volume}
         setVolume={setVolume}
       />
-      <ControlScreen power={power} setPower={setPower} volume={volume} setVolume={setVolume} />
     </div>
   );
 }
 
-export default App;
+export default App;
