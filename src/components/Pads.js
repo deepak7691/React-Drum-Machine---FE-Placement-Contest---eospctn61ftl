@@ -1,56 +1,34 @@
 import React from "react";
 import Pad from "./Pad";
-import { bank1 } from "./App"
+import { bank1 } from "./App";
 
-function Pads() {
+function Pads({ power, volume }) {
   const keypadCode = Object.keys(bank1);
 
-  const [displayText, setDisplayText] = React.useState("");
-
-  const [power, setPower] = React.useState(true);
-  const handlePowerChange = () => {
-    setPower(!power);
-    if (!power) {
-      setDisplayText("");
-    }
-  }
-
-  const [volume, setVolume] = React.useState(50);
-  const handleVolumeChange = e => {
-    setVolume(e.target.value);
-    setDisplayText(`Volume: ${e.target.value}`);
-  }
-
-  const handleClick = name => {
-    setDisplayText(name);
-  }
+  const playSound = (e) => {
+    const audio = document.getElementById(e.target.innerText);
+    audio.volume = volume;
+    audio.currentTime = 0;
+    audio.play();
+    document.getElementById("display").innerText = bank1[e.target.innerText].name;
+  };
 
   return (
-    <div id='div-pads'>
+    <div id="div-pads">
       {keypadCode.map((pad, idx) => {
         return (
           <Pad
             id={pad + idx}
             key={pad + idx}
-            handleClick={handleClick}
+            handleClick={playSound}
+            element={pad}
             power={power}
-            backgroundStyle={power ? 'lightsalmon' : 'lightgray'}
-            element={pad} />
+          />
         );
       })}
-      <div id='display'>{displayText}</div>
-      <div id='control-screen'>
-        <label id='label-power'>
-          <input type='checkbox' id='power' checked={power} onChange={handlePowerChange} />
-          <span className='checkmark'>{power ? 'On' : 'Off'}</span>
-        </label>
-        <label id='label-volume'>
-          <input type='range' id='volume' value={volume} min='0' max='100' onChange={handleVolumeChange} />
-          <span id='volume-display'>{`Volume: ${volume}`}</span>
-        </label>
-      </div>
+      <div id="display">Play a sound!</div>
     </div>
-  )
+  );
 }
 
-export default Pads;
+export default Pads;
